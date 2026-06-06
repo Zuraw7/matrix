@@ -1,4 +1,6 @@
 .vscode
+bin/
+docs/
 en.subject.pdf
 main.cpp
 TODO
