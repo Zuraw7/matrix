@@ -22,6 +22,7 @@ $(DOC_INDEX):
 # Build and run every test executable (each test file has its own main).
 test: $(TEST_BINS)
 	@for bin in $(TEST_BINS); do \
+		echo ""; \
 		echo "===== $$bin ====="; \
 		./$$bin; \
 	done
