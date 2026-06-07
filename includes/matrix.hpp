@@ -63,6 +63,41 @@ namespace mx {
 		}
 
 		/**
+		 * @brief Element-wise sum, as a new matrix.
+		 * @param other Matrix of the same shape.
+		 * @return A new matrix equal to @c *this + @p other; operands unchanged.
+		 */
+		Matrix<K> operator+(const Matrix<K> &other) const {
+			Matrix<K> retMat = *this;
+			retMat.add(other);
+			return retMat;
+		}
+
+		/**
+		 * @brief Element-wise difference, as a new matrix.
+		 * @param other Matrix of the same shape.
+		 * @return A new matrix equal to @c *this - @p other; operands unchanged.
+		 */
+		Matrix<K> operator-(const Matrix<K> &other) const {
+			Matrix<K> retMat = *this;
+			retMat.subtract(other);
+			return retMat;
+		}
+
+		/**
+		 * @brief Scalar multiple, as a new matrix.
+		 * @param scalar Factor applied to every element.
+		 * @return A new matrix equal to @c *this * @p scalar; @c *this unchanged.
+		 * @note Member form, so the matrix must be the left operand
+		 *       (@c mat * s, not @c s * mat).
+		 */
+		Matrix<K> operator*(const K &scalar) const {
+			Matrix<K> retMat = *this;
+			retMat.scale(scalar);
+			return retMat;
+		}
+
+		/**
 		 * @brief Stream the matrix row by row as @c [ a, b ] per line.
 		 * @param out Output stream.
 		 * @param mat Matrix to print.

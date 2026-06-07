@@ -55,6 +55,34 @@ namespace mx {
 		return linearCombination(std::vector<Vector<K>>(vecs),std::vector<K>(coeffs));
 	}
 
+	/**
+	 * @brief Linear interpolation between two values.
+	 *
+	 * Returns @c u + (v - u) * t, i.e. the point a fraction @p t of the way
+	 * from @p u to @p v: @c t==0 yields @p u, @c t==1 yields @p v, and @c t==0.5
+	 * the midpoint.
+	 *
+	 * Generic over any type @p K that supports @c +, @c - and @c * by
+	 * a @c float (scalars, @ref Vector, @ref Matrix). @p t is clamped to [0, 1].
+	 *
+	 * @tparam K Interpolated type (a scalar, vector or matrix).
+	 * @param u Value at @c t==0.
+	 * @param v Value at @c t==1.
+	 * @param t Interpolation factor; clamped to the range [0, 1].
+	 * @return The interpolated value of type @p K.
+	 *
+	 * @code
+	 * lerp(0.0f, 1.0f, 0.5f);	// 0.5
+	 * lerp(mx::Vector<float>{2.0f, 1.0f}, mx::Vector<float>{4.0f, 2.0f}, 0.3f);	// { 2.6, 1.3 }
+	 * @endcode
+	 */
+	template<typename K>
+	K lerp(K u, K v, float t) {
+		if (t < 0.0f) t = 0.0f;
+		if (t > 1.0f) t = 1.0f;
+		return u + (v - u) * t;
+	}
+
 }
 
 #endif

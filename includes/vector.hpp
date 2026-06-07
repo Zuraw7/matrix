@@ -52,6 +52,41 @@ namespace mx {
 		const K& operator[](size_t i) const { return m_scalars[i]; }
 
 		/**
+		 * @brief Element-wise sum, as a new vector.
+		 * @param other Vector of the same size.
+		 * @return A new vector equal to @c *this + @p other; operands unchanged.
+		 */
+		Vector<K> operator+(const Vector<K> &other) const {
+			Vector<K> retVec = *this;
+			retVec.add(other);
+			return retVec;
+		}
+
+		/**
+		 * @brief Element-wise difference, as a new vector.
+		 * @param other Vector of the same size.
+		 * @return A new vector equal to @c *this - @p other; operands unchanged.
+		 */
+		Vector<K> operator-(const Vector<K> &other) const {
+			Vector<K> retVec = *this;
+			retVec.subtract(other);
+			return retVec;
+		}
+
+		/**
+		 * @brief Scalar multiple, as a new vector.
+		 * @param scalar Factor applied to every component.
+		 * @return A new vector equal to @c *this * @p scalar; @c *this unchanged.
+		 * @note Member form, so the vector must be the left operand
+		 *       (@c vec * s, not @c s * vec).
+		 */
+		Vector<K> operator*(const K &scalar) const {
+			Vector<K> retVec = *this;
+			retVec.scale(scalar);
+			return retVec;
+		}
+
+		/**
 		 * @brief Stream the vector as @c { a, b, c }.
 		 * @param out Output stream.
 		 * @param vec Vector to print.
