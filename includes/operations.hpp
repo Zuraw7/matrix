@@ -132,6 +132,33 @@ namespace mx {
 		return v.dot(u) / (nv * nu);
 	}
 
+	/**
+	 * @brief Cross product of two 3-dimensional vectors.
+	 *
+	 * Returns the vector @c v x u, perpendicular to both @p v and @p u,
+	 * with orientation given by the right-hand rule. Its length equals
+	 * @c ||v|| * ||u|| * sin(theta), the area of the parallelogram they span,
+	 * so parallel inputs yield the zero vector. The operation is
+	 * anticommutative: @c v x u == -(u x v).
+	 *
+	 * Defined only in 3D.
+	 *
+	 * @tparam K Scalar (field) type.
+	 * @param v First vector (size 3).
+	 * @param u Second vector (size 3).
+	 * @return The cross product @c v x u, a vector of size 3.
+	 * @throws std::invalid_argument if either vector is not 3-dimensional.
+	 */
+	template<typename K>
+	Vector<K> crossProduct(const Vector<K> &v, const Vector<K> &u) {
+		if (v.size() != 3 || u.size() != 3)
+			throw std::invalid_argument("crossProduct: vectors must be 3-dimensional");
+
+		return {	v[1] * u[2] - v[2] * u[1],
+					v[2] * u[0] - v[0] * u[2],
+					v[0] * u[1] - v[1] * u[0] };
+	}
+
 }
 
 #endif
