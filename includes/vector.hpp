@@ -1,10 +1,12 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
+#include <cmath>
 #include <initializer_list>
 #include <iostream>
 #include <ostream>
 #include <cstddef>
+#include <stdexcept>
 #include <vector>
 
 namespace mx {
@@ -134,6 +136,31 @@ namespace mx {
 		void scale(const K& scalar) {
 			for (K& s: m_scalars)
 				s *= scalar;
+		}
+
+		/**
+		 * @brief Dot (inner) product with another vector.
+		 *
+		 * Returns the scalar @c sum(this[i] * other[i]), computed with
+		 * @c std::fma for accuracy. Equals @c |this|*|other|*cos(theta): its
+		 * sign tells direction (positive: same side, zero: orthogonal,
+		 * negative: opposite) while its magnitude also scales with the lengths.
+		 * The dot of a vector with itself is its squared length.
+		 *
+		 * @param other Vector of the same size.
+		 * @return The scalar dot product.
+		 * @throws std::invalid_argument if the sizes differ.
+		 * @note Runs in O(n).
+		 */
+		K dot(const Vector<K> &other) const {
+			if (size() != other.size())
+				throw std::invalid_argument("Vector: dot product requires vectors with same size");
+			K result{0};
+
+			for (size_t i = 0; i < size(); i++) {
+				result = std::fma(m_scalars[i], other.m_scalars[i], result);
+			}
+			return result;
 		}
 
 		/**

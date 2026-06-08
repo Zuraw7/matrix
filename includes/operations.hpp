@@ -83,6 +83,23 @@ namespace mx {
 		return u + (v - u) * t;
 	}
 
+	/**
+	 * @brief Dot (inner) product of two vectors.
+	 *
+	 * Free-function form of @ref Vector::dot, so callers can write
+	 * @c mx::dot(u, v). Returns the scalar @c sum(v[i] * u[i]).
+	 *
+	 * @tparam K Scalar (field) type.
+	 * @param v First vector.
+	 * @param u Second vector, of the same size as @p v.
+	 * @return The scalar dot product.
+	 * @throws std::invalid_argument if the sizes differ.
+	 */
+	template<typename K>
+	K dot(const Vector<K> &v, const Vector<K> &u) {
+		return v.dot(u);
+	}
+
 }
 
 #endif
