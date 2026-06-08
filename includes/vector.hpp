@@ -108,11 +108,11 @@ namespace mx {
 		/**
 		 * @brief Add another vector element-wise, in place.
 		 * @param other Vector of the same size; sizes must match.
-		 * @note If sizes differ the call returned.
+		 * @throws std::invalid_argument if the sizes differ.
 		 */
 		void add(const Vector<K>& other) {
 			if (m_scalars.size() != other.m_scalars.size())
-				return;
+				throw std::invalid_argument("Vector: add requires equal sizes");
 			for (size_t i = 0; i < m_scalars.size(); i++)
 				m_scalars[i] += other.m_scalars[i];
 		}
@@ -120,11 +120,11 @@ namespace mx {
 		/**
 		 * @brief Subtract another vector element-wise, in place.
 		 * @param other Vector of the same size; sizes must match.
-		 * @note If sizes differ the call is returned.
+		 * @throws std::invalid_argument if the sizes differ.
 		 */
 		void subtract(const Vector<K>& other) {
 			if (m_scalars.size() != other.m_scalars.size())
-				return;
+				throw std::invalid_argument("Vector: subtract requires equal sizes");
 			for (size_t i = 0; i < m_scalars.size(); i++)
 				m_scalars[i] -= other.m_scalars[i];
 		}

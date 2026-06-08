@@ -5,6 +5,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <ostream>
+#include <stdexcept>
 #include <utility>
 #include <vector>
 
@@ -42,17 +43,18 @@ namespace mx {
 		 * mx::Matrix<float> m{{1.0f, 2.0f}, {3.0f, 4.0f}}; // [1.0 2.0 / 3.0 4.0]
 		 * @endcode
 		 *
-		 * @note If the rows are not all the same length the buffer is cleared.
+		 * @throws std::invalid_argument if the rows are not all the same length.
 		 */
 		Matrix(std::initializer_list<std::initializer_list<K>> list) : m_rows(list.size()), m_cols(list.begin()->size()) {
 			m_scalars.resize(m_rows * m_cols);
 
+			for (const auto &line: list) {
+				if (line.size() != m_cols)
+					throw std::invalid_argument("Matrix: all rows must have equal length");
+			}
+
 			size_t row = 0;
 			for (const auto &line: list) {
-				if (line.size() != m_cols) {
-					m_scalars.clear();
-					return;
-				}
 				size_t col = 0;
 				for (const K& val: line) {
 					m_scalars[col * m_rows + row] = val;
@@ -135,11 +137,11 @@ namespace mx {
 		/**
 		 * @brief Add another matrix element-wise, in place.
 		 * @param other Matrix of the same shape; rows and cols must match.
-		 * @note If shapes differ the call returns without changes.
+		 * @throws std::invalid_argument if the shapes differ.
 		 */
 		void add(const Matrix<K>& other) {
 			if (m_rows != other.m_rows || m_cols != other.m_cols)
-				return;
+				throw std::invalid_argument("Matrix: add requires equal shapes");
 			for (size_t i = 0; i < m_scalars.size(); i++)
 				m_scalars[i] += other.m_scalars[i];
 		}
@@ -147,11 +149,11 @@ namespace mx {
 		/**
 		 * @brief Subtract another matrix element-wise, in place.
 		 * @param other Matrix of the same shape; rows and cols must match.
-		 * @note If shapes differ the call returns without changes.
+		 * @throws std::invalid_argument if the shapes differ.
 		 */
 		void subtract(const Matrix<K>& other) {
 			if (m_rows != other.m_rows || m_cols != other.m_cols)
-				return;
+				throw std::invalid_argument("Matrix: subtract requires equal shapes");
 			for (size_t i = 0; i < m_scalars.size(); i++)
 				m_scalars[i] -= other.m_scalars[i];
 		}

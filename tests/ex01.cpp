@@ -1,6 +1,7 @@
 #include "../includes/operations.hpp"
 #include "../includes/vector.hpp"
 #include <iostream>
+#include <stdexcept>
 
 int main() {
     std::cout << "===== Linear combination =====\n";
@@ -24,9 +25,14 @@ int main() {
     mx::Vector<float> r3 = mx::linearCombination(vs, cs);
     std::cout << "r3: " << r3 << "  (expected { 10, 0, 230 })\n";
 
-    // size mismatch -> empty result
-    mx::Vector<float> r4 = mx::linearCombination({v1, v2}, {1.f});
-    std::cout << "r4 (mismatch): " << r4 << "  (expected {  })\n";
+    // count mismatch -> throw
+    std::cout << "count mismatch: ";
+    try {
+        mx::linearCombination({v1, v2}, {1.f});
+        std::cout << "NO THROW (wrong)\n";
+    } catch (const std::invalid_argument& e) {
+        std::cout << "threw invalid_argument (ok)\n";
+    }
 
     return 0;
 }

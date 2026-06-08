@@ -11,6 +11,7 @@ TEST_DIR  = tests
 BIN_DIR   = bin
 TEST_SRCS = $(shell find $(TEST_DIR) -name '*.cpp')
 TEST_BINS = $(patsubst $(TEST_DIR)/%.cpp, $(BIN_DIR)/%, $(TEST_SRCS))
+HEADERS   = $(wildcard $(INC_DIR)/*.hpp)
 
 all: $(TEST_BINS) $(DOC_INDEX)
 
@@ -27,7 +28,7 @@ test: $(TEST_BINS)
 		./$$bin; \
 	done
 
-$(BIN_DIR)/%: $(TEST_DIR)/%.cpp
+$(BIN_DIR)/%: $(TEST_DIR)/%.cpp $(HEADERS)
 	@mkdir -p $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) -I $(INC_DIR) $< -o $@
 

@@ -4,6 +4,7 @@
 #include "vector.hpp"
 #include <cmath>
 #include <initializer_list>
+#include <stdexcept>
 #include <vector>
 
 namespace mx {
@@ -23,8 +24,9 @@ namespace mx {
 	 * @tparam K Scalar (field) type.
 	 * @param vecs Vectors to combine; all of equal dimension.
 	 * @param coeffs Coefficients, one per vector; @c coeffs.size() == @c vecs.size().
-	 * @return The combined vector, or an empty vector if the inputs are empty,
-	 *         the counts differ, or the vectors are not all the same size.
+	 * @return The combined vector.
+	 * @throws std::invalid_argument if the inputs are empty, the counts differ,
+	 *         or the vectors are not all the same size.
 	 *
 	 * @code
 	 * mx::Vector<float> v1{1,2,3}, v2{0,10,-100};
@@ -34,14 +36,14 @@ namespace mx {
 	template<typename K>
 	Vector<K> linearCombination(const std::vector<Vector<K>> &vecs, const std::vector<K> &coeffs) {
 		if (vecs.size() != coeffs.size() || vecs.empty())
-			return Vector<K>(0);
+			throw std::invalid_argument("linearCombination: need one coeff per vector, non-empty");
 
 		size_t n = vecs.front().size();
 		Vector<K> result(n);
 
 		for (size_t i = 0; i < vecs.size(); i++) {
 			if (vecs[i].size() != n)
-				return Vector<K>(0);
+				throw std::invalid_argument("linearCombination: all vectors must have equal size");
 			for (size_t j = 0; j < n; j++) {
 				result[j] = std::fma(coeffs[i], vecs[i][j], result[j]);
 			}
