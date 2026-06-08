@@ -102,6 +102,36 @@ namespace mx {
 		return v.dot(u);
 	}
 
+	/**
+	 * @brief Cosine of the angle between two vectors.
+	 *
+	 * Returns @c dot(v, u) / (||v|| * ||u||), the cosine of the angle theta
+	 * between the vectors. The result lies in [-1, 1]: @c 1 means same
+	 * direction (theta = 0), @c 0 means orthogonal (theta = 90 deg) and
+	 * @c -1 means opposite direction (theta = 180 deg).
+	 *
+	 * @tparam K Scalar (field) type.
+	 * @param v First vector.
+	 * @param u Second vector, of the same size as @p v.
+	 * @return The cosine of the angle, in [-1, 1].
+	 * @throws std::invalid_argument if either vector is empty, the sizes
+	 *         differ, or either vector has zero length (angle undefined).
+	 */
+	template<typename K>
+	float angleCos(const Vector<K> &v, const Vector<K> &u) {
+		if (v.size() == 0 || u.size() == 0)
+			throw std::invalid_argument("angleCos: vectors cannot be empty");
+
+		if (v.size() != u.size())
+			throw std::invalid_argument("angleCos: vectors must have equal size");
+
+		float nv = v.norm(), nu = u.norm();
+		if (nv == 0.0f || nu == 0.0f)
+			throw std::invalid_argument("angleCos: zero-length vector has no angle");
+
+		return v.dot(u) / (nv * nu);
+	}
+
 }
 
 #endif
