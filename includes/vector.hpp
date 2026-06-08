@@ -1,6 +1,7 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
+#include <algorithm>
 #include <cmath>
 #include <initializer_list>
 #include <iostream>
@@ -159,6 +160,56 @@ namespace mx {
 
 			for (size_t i = 0; i < size(); i++) {
 				result = std::fma(m_scalars[i], other.m_scalars[i], result);
+			}
+			return result;
+		}
+
+		/**
+		 * @brief Taxicab (Manhattan, L1) norm: sum of absolute values.
+		 *
+		 * Computes @c |v[0]| + |v[1]| + ... + |v[n-1]|, the distance traveled
+		 * moving only along the axes. Absolute value is taken as
+		 * @c max(x, -x) since @c std::abs is not used.
+		 *
+		 * @return The L1 norm as a real number (always non-negative).
+		 */
+		float norm_1() const {
+			float result = 0.0f;
+			for (const auto &scalar: m_scalars)
+				result += std::max(scalar, -scalar);
+			return result;
+		}
+
+		/**
+		 * @brief Euclidean (L2) norm: straight-line length of the vector.
+		 *
+		 * Computes @c sqrt(v[0]^2 + v[1]^2 + ...), the ordinary geometric
+		 * length from the origin. The squares are accumulated with @c std::fma
+		 * and the square root is taken as @c pow(sum, 0.5).
+		 *
+		 * @return The L2 norm as a real number (always non-negative).
+		 */
+		float norm() const {
+			float result = 0.0f;
+			for (const auto &scalar: m_scalars) {
+				result = std::fma(scalar, scalar, result);
+			}
+			return std::pow(result, 0.5);
+		}
+
+		/**
+		 * @brief Supremum (infinity, L-inf) norm: largest absolute value.
+		 *
+		 * Computes @c max(|v[0]|, |v[1]|, ...), the magnitude of the most
+		 * extreme coordinate. This is the limit of the p-norm as p approaches
+		 * infinity, where the largest component dominates.
+		 *
+		 * @return The L-inf norm as a real number (always non-negative).
+		 */
+		float norm_inf() const {
+			float result = 0.0f;
+			for (const auto &scalar: m_scalars) {
+				result = std::max(result, std::max(scalar, -scalar));
 			}
 			return result;
 		}

@@ -9,7 +9,7 @@ DOC_INDEX = $(DOC_DIR)/html/index.html
 
 TEST_DIR  = tests
 BIN_DIR   = bin
-TEST_SRCS = $(shell find $(TEST_DIR) -name '*.cpp')
+TEST_SRCS = $(sort $(shell find $(TEST_DIR) -name '*.cpp'))
 TEST_BINS = $(patsubst $(TEST_DIR)/%.cpp, $(BIN_DIR)/%, $(TEST_SRCS))
 HEADERS   = $(wildcard $(INC_DIR)/*.hpp)
 
