@@ -225,6 +225,27 @@ namespace mx {
 		}
 
 		/**
+		 * @brief Trace: sum of the main-diagonal elements.
+		 *
+		 * Returns @c at(0,0) + at(1,1) + ... for a square matrix. Defined
+		 * only for square matrices.
+		 *
+		 * @return The trace as a scalar of type @p K.
+		 * @throws std::invalid_argument if the matrix is not square.
+		 * @note Time complexity O(n) for an n-by-n matrix.
+		 */
+		K trace() const {
+			if (!isSquare())
+				throw std::invalid_argument("trace: Matrix must be square");
+
+			K result{0};
+			for (size_t i = 0; i < m_rows; i++)
+				result += at(i, i);
+
+			return result;
+		}
+
+		/**
 		 * @brief Shape of the matrix.
 		 * @return A pair {rows, cols}.
 		 */
