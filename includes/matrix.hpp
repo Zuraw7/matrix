@@ -1,6 +1,8 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
 
+#include "vector.hpp"
+#include <cmath>
 #include <cstddef>
 #include <initializer_list>
 #include <iostream>
@@ -168,6 +170,61 @@ namespace mx {
 		}
 
 		/**
+		 * @brief Matrix-vector product, M * v.
+		 *
+		 * Treats @p v as a column vector and returns @c M * v, whose i-th
+		 * element is the dot product of row i with @p v. The vector's size
+		 * must equal the number of columns; the result has one element per
+		 * row. Accumulated with @c std::fma for accuracy.
+		 *
+		 * @param v Vector of size @c m_cols (column count).
+		 * @return The product vector, of size @c m_rows (row count).
+		 * @throws std::invalid_argument if @c v.size() != @c m_cols.
+		 * @note Time complexity O(nm) for an n-by-m matrix.
+		 */
+		Vector<K> mulVec(const Vector<K> &v) const {
+			if (m_cols != v.size())
+				throw std::invalid_argument("mulVec: vector size must equal matrix column size");
+
+			Vector<K> result(m_rows);
+			for (size_t row = 0; row < m_rows; row++)
+				for (size_t col = 0; col < m_cols; col++)
+						result[row] = std::fma(at(row, col), v[col], result[row]);
+
+			return result;
+		}
+
+		/**
+		 * @brief Matrix-matrix product, this * mat.
+		 *
+		 * Returns the product @c A * B where @c A is @c *this. Element
+		 * @c (i, j) is the dot product of row i of @c A with column j of
+		 * @c mat. The inner dimensions must agree: this matrix's column
+		 * count must equal @p mat's row count. The result is
+		 * @c m_rows by @c mat.m_cols. Accumulated with @c std::fma.
+		 *
+		 * @param mat Right-hand matrix; its row count must equal @c m_cols.
+		 * @return The product matrix, of shape @c m_rows by @c mat.m_cols.
+		 * @throws std::invalid_argument if @c m_cols != @c mat.m_rows.
+		 * @note Time complexity O(nmp) for shapes (n x m) * (m x p).
+		 */
+		Matrix<K> mulMat(const Matrix<K> &mat) const {
+			if (m_cols != mat.m_rows)
+				throw std::invalid_argument("mulMat: left matrix columns must equal right matrix rows");
+
+			Matrix<K> result(m_rows, mat.m_cols);
+			for (size_t row = 0; row < m_rows; row++) {
+				for (size_t col = 0; col < mat.m_cols; col++) {
+					for (size_t k = 0; k < m_cols; k++) {
+						result.at(row, col) = std::fma(at(row, k), mat.at(k, col), result.at(row, col));
+					}
+				}
+			}
+
+			return result;
+		}
+
+		/**
 		 * @brief Shape of the matrix.
 		 * @return A pair {rows, cols}.
 		 */
@@ -180,7 +237,7 @@ namespace mx {
 		bool isSquare() const { return m_rows == m_cols; }
 
 		/** @brief Print the matrix to standard output followed by a newline. */
-		void print() const { std::cout << *this << std::endl; }
+		void print() const { std::cout << *this; }
 
 	private:
 		size_t m_rows;            ///< Number of rows.
