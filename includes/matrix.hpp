@@ -246,6 +246,26 @@ namespace mx {
 		}
 
 		/**
+		 * @brief Transpose: reflect the matrix across its main diagonal.
+		 *
+		 * Returns a new matrix where element @c (i, j) becomes @c (j, i), so
+		 * rows become columns and vice versa. An @c n-by-m matrix yields an
+		 * @c m-by-n one. Works for any shape.
+		 *
+		 * @return The transposed matrix, of shape @c m_cols by @c m_rows.
+		 * @note Time complexity O(nm) for an n-by-m matrix.
+		 */
+		Matrix<K> transpose() const {
+			Matrix<K> result{m_cols, m_rows};
+
+			for (size_t row = 0; row < m_rows; row++)
+				for (size_t col = 0; col < m_cols; col++)
+					result.at(col, row) = at(row, col);
+
+			return result;
+		}
+
+		/**
 		 * @brief Shape of the matrix.
 		 * @return A pair {rows, cols}.
 		 */
